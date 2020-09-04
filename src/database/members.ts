@@ -40,25 +40,16 @@ export interface Member {
     delete: boolean;
 }
 
-interface NewMember {
-    name: string;
-    email: string;
-    hashedPassword: string;
-    salt: string;
-}
-
-export const insertMember = async (member: NewMember) => {
-    const insertedIds = await knexClient
+export const insertMember = async (member: RegisterRequest) => {
+    const insertedRows = await knexClient
         .insert({
             name: member.name,
             email: member.email,
-            hashed_password: member.hashedPassword,
-            salt: member.salt,
         })
         .into("member")
-        .returning("id");
+        .returning("*");
 
-    return insertedIds[0];
+    return insertedRows[0];
 }
 
 export const updateMember = async (id: number, member: RegisterRequest) => {
